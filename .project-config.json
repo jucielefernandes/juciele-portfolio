@@ -1,0 +1,43 @@
+{
+  "build_command": "pnpm run build",
+  "capabilities": [
+    "server",
+    "db",
+    "user"
+  ],
+  "dev_command": "pnpm run dev",
+  "env_vars": {
+    "DATABASE_URL": "mysql://2hYfPQvJW3qocvW.d490ec57a5e6:qIWS63BJ1jCKg7i67CUC@gateway06.us-east-1.prod.aws.tidbcloud.com:4000/jnHDvtastEq9pgLA3XoLZ7?ssl={\"rejectUnauthorized\":true}"
+  },
+  "experiments": [
+    "no_db_push"
+  ],
+  "git_remote": {
+    "repo_url": "s3://vida-prod-gitrepo/webdev-git/310519663666103460/jnHDvtastEq9pgLA3XoLZ7",
+    "access_key_id": "ASIAZV3A2ECZBQBHGZVY",
+    "secret_access_key": "0C0ot/7USzG/UwQp41YHAj2AdJbr5gIU5gzKPGFc",
+    "session_token": "IQoJb3JpZ2luX2VjED8aCXVzLWVhc3QtMSJHMEUCIH7yYKqRQib9GEXkr0L1aG6k2SugPBrO64nLEKNNsvspAiEAnj19yJqzeLTe3EDRyDM0oQtnkrN+ca8Ldlo7iPmAWDwq9gMIBxAEGgw2NjUzODYwOTg4NjYiDBEG/GKHOQehab/dOirTA+s1iqZmC/+ZRV/dlKAhZkNrAEkLLzVC7T5ocWt63l1wYMKGBVtib4aqvNIJ7ARmdHPzoTOAHR8adnjrb13u9QNo/PzlwRH/6FF4gxsHohFmDY0ACD8/lcVFQZx+3TtfMyz/Bml3mv6KZVQQ0+G1S5PLPmVPzo9/KbHQaSQdETp2LBDLmRxh0i1mShUFF2nPadJQf9PdDBpJUlr7Hy8qojZ4Rok8hDWVTZNUWhWSFIY7cowcSnPWBXWHqaxDr7GUSwSiO5uznXG2HLCmfZX9yEqFM7zeL8EgMYlDyREtHxQSTtrgBEH6NHqdNp9qMscSWyLcWWfUezRsgGI0G8f8+ltarmcPuZBv5oFVgUWk0lYcJ3PFdAdxiofbl8eO0fJtalu6NnuMX2IedDN3jtx0EY3ONI8mJU7gewcmASFB16bhgIqEpEWKDbvPsakZ3I1OR+kIKuCX6jQGRO5jU+Inf3OMw0Csqky4rveGxZao7YRYSlSly7yDuCUytTge6+sT6ik2N6/TwQ5ngWyjE//EeCAkbPCQrVlJ0ELhpscAyXcwlnUpbDL7aZWvTJt8hc/eIR9mDzVLRpBhcsyLvg7aLOxYc87Cp8JTu9wEVjov63pqtw7KMOCpvNAGOp0BBrLxsBMXRxL1NhgCZjyJ1rNn++COCwFaRmPPBECkggL7zYJkEQYj0w7PhbWlB2fF4zfXAXMZnoigFnPd94zcW4WEy6EgGCiPvotawY+gLXaYGtXz6MdP8x0t8jHJahRhfjT1usyRak5JYrWv89pw162KwG10mOb9fNPiVsc5ay3/zN5fkJ9QRgceYv/WznypIyeo/+vu7p0q/VJlxQ==",
+    "expiration": "2026-05-22T02:21:20.000Z"
+  },
+  "name": "juciele-portfolio",
+  "path": "/home/ubuntu/juciele-portfolio",
+  "port": 3000,
+  "secrets": {
+    "BUILT_IN_FORGE_API_KEY": "NoyhvUP66vtuM9FRnpJucp",
+    "BUILT_IN_FORGE_API_URL": "https://forge.manus.ai",
+    "JWT_SECRET": "NQGDHBZsB4pDaPGP5PX9DG",
+    "OAUTH_SERVER_URL": "https://api.manus.im",
+    "OWNER_NAME": "juciele.bol",
+    "OWNER_OPEN_ID": "UhVs9NiBoRGNbpT72B98Ch",
+    "VITE_ANALYTICS_ENDPOINT": "https://manus-analytics.com",
+    "VITE_ANALYTICS_WEBSITE_ID": "f3a5fb59-8c89-48e7-b2fc-815eb00d3dba",
+    "VITE_APP_ID": "jnHDvtastEq9pgLA3XoLZ7",
+    "VITE_APP_LOGO": "",
+    "VITE_APP_TITLE": "Portfólio | Juciele Fernandes",
+    "VITE_FRONTEND_FORGE_API_KEY": "KNLMKmZeNrqhDMXqW6oSo5",
+    "VITE_FRONTEND_FORGE_API_URL": "https://forge.manus.ai",
+    "VITE_OAUTH_PORTAL_URL": "https://manus.im"
+  },
+  "template_id": "web-db-user",
+  "test_command": "pnpm test"
+}
