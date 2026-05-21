@@ -21,6 +21,7 @@ import {
   verifyAdminCredentials,
 } from "./db";
 import { nanoid } from "nanoid";
+import { storagePut } from "./storage";
 
 export const appRouter = router({
   system: systemRouter,
@@ -83,6 +84,37 @@ export const appRouter = router({
 
       return { isAuthenticated: true };
     }),
+  }),
+
+  // Upload
+  upload: router({
+    uploadImage: publicProcedure
+      .input(
+        z.object({
+          base64: z.string(),
+          filename: z.string(),
+          mimeType: z.string(),
+        })
+      )
+      .mutation(async ({ input, ctx }) => {
+        const sessionToken = ctx.req.cookies?.admin_session;
+        if (!sessionToken) throw new TRPCError({ code: "UNAUTHORIZED" });
+        const session = await getAdminSessionByToken(sessionToken);
+        if (!session || session.expiresAt < new Date())
+          throw new TRPCError({ code: "UNAUTHORIZED" });
+
+        // Convert base64 to buffer
+        const buffer = Buffer.from(input.base64, "base64");
+
+        // Upload to storage
+        const { key, url } = await storagePut(
+          `portfolio/${input.filename}`,
+          buffer,
+          input.mimeType
+        );
+
+        return { key, url };
+      }),
   }),
 
   // Projects

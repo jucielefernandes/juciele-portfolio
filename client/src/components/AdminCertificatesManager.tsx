@@ -7,6 +7,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
 import { Plus, Edit2, Trash2 } from "lucide-react";
+import ImageUploader from "./ImageUploader";
 import type { Certificate } from "@/lib/types";
 
 export default function AdminCertificatesManager() {
@@ -135,7 +136,7 @@ export default function AdminCertificatesManager() {
       </div>
 
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
-        <DialogContent className="max-w-2xl">
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>
               {editingId ? "Editar Certificado" : "Novo Certificado"}
@@ -180,18 +181,14 @@ export default function AdminCertificatesManager() {
               />
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="imageUrl">URL da Imagem</Label>
-              <Input
-                id="imageUrl"
-                type="url"
-                value={formData.imageUrl}
-                onChange={(e) =>
-                  setFormData({ ...formData, imageUrl: e.target.value })
-                }
-                placeholder="https://..."
-              />
-            </div>
+            <ImageUploader
+              value={formData.imageUrl}
+              onChange={(url) =>
+                setFormData({ ...formData, imageUrl: url })
+              }
+              label="Imagem do Certificado"
+              placeholder="Cole a URL da imagem ou faça upload"
+            />
 
             <div className="flex gap-2 justify-end pt-4">
               <Button

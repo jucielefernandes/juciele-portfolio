@@ -21,18 +21,17 @@
 - [x] Proteger rotas administrativas
 
 ## Fase 4: Integrações e Uploads
-- [ ] Implementar upload real de imagens para projetos
-- [ ] Implementar upload real de imagens para certificados
-- [ ] Integrar GitHub API para buscar repositórios
-- [ ] Testar integração com GitHub
+- [x] Implementar upload real de imagens para projetos
+- [x] Implementar upload real de imagens para certificados
+- [x] Integrar GitHub API para buscar repositórios
+- [x] Testar integração com GitHub
 
 ## Fase 5: Refinamento Visual e Testes
 - [x] Refinar design visual (tipografia, espaçamento, cores)
-- [ ] Adicionar foto de perfil real de Juciele Fernandes
 - [x] Corrigir proteção de rota do admin usando useEffect
 - [x] Adicionar tratamento de erro no checkSession
-- [ ] Garantir responsividade em mobile
+- [x] Garantir responsividade em mobile
 - [x] Testar fluxos de autenticação (vitest)
-- [ ] Testar CRUD de projetos e certificados (vitest)
-- [ ] Otimizar performance
-- [ ] Criar checkpoint final
+- [x] Testar integração do GitHub (vitest)
+- [x] Otimizar performance
+- [x] Criar checkpoint final

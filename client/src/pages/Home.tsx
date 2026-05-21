@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { trpc } from "@/lib/trpc";
+import GitHubRepositories from "@/pages/GitHubRepositories";
 
 const TECH_STACK = [
   { name: "Java", color: "bg-orange-100 text-orange-800" },
@@ -266,19 +267,10 @@ export default function Home() {
       </section>
 
       {/* GitHub Repositories Section */}
-      <section id="github" className="container mx-auto px-4 py-20 md:py-32">
-        <h2 className="text-4xl md:text-5xl font-bold mb-12">Repositórios</h2>
-        <div className="text-center py-12 text-muted-foreground">
-          <p className="mb-4">Repositórios do GitHub serão exibidos aqui</p>
-          <a
-            href="https://github.com/jucielefernandes"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 text-accent hover:underline font-semibold"
-          >
-            Ver no GitHub
-            <ExternalLink size={16} />
-          </a>
+      <section id="github" className="bg-muted/30 py-20 md:py-32">
+        <div className="container mx-auto px-4">
+          <h2 className="text-4xl md:text-5xl font-bold mb-12">Repositórios GitHub</h2>
+          <GitHubRepositories />
         </div>
       </section>
 
