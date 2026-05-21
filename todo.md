@@ -10,7 +10,7 @@
 - [x] Criar homepage com bio, foto de perfil, tech stack badges
 - [x] Implementar seção de projetos
 - [x] Implementar seção de certificados
-- [ ] Integrar repositórios do GitHub
+- [x] Integrar repositórios do GitHub
 - [x] Adicionar links para LinkedIn e GitHub
 
 ## Fase 3: Área Administrativa
