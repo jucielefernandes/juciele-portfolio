@@ -18,6 +18,7 @@ export default function AdminCertificatesManager() {
     issuer: "",
     date: "",
     imageUrl: "",
+    certificateUrl: "",
   });
 
   const certificatesQuery = trpc.certificates.list.useQuery();
@@ -35,6 +36,7 @@ export default function AdminCertificatesManager() {
         issuer: cert.issuer,
         date: cert.date,
         imageUrl: cert.imageUrl || "",
+        certificateUrl: cert.certificateUrl || "",
       });
     } else {
       setEditingId(null);
@@ -43,6 +45,7 @@ export default function AdminCertificatesManager() {
         issuer: "",
         date: "",
         imageUrl: "",
+        certificateUrl: "",
       });
     }
     setIsOpen(true);
@@ -59,6 +62,7 @@ export default function AdminCertificatesManager() {
           issuer: formData.issuer,
           date: formData.date,
           imageUrl: formData.imageUrl || undefined,
+          certificateUrl: formData.certificateUrl || undefined,
         });
         toast.success("Certificado atualizado com sucesso!");
       } else {
@@ -67,6 +71,7 @@ export default function AdminCertificatesManager() {
           issuer: formData.issuer,
           date: formData.date,
           imageUrl: formData.imageUrl || undefined,
+          certificateUrl: formData.certificateUrl || undefined,
         });
         toast.success("Certificado criado com sucesso!");
       }
@@ -113,6 +118,16 @@ export default function AdminCertificatesManager() {
             <p className="text-xs text-muted-foreground mb-4">
               {new Date(cert.date).toLocaleDateString("pt-BR")}
             </p>
+            {cert.certificateUrl && (
+              <a
+                href={cert.certificateUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex text-sm text-accent hover:underline mb-4"
+              >
+                Ver certificado
+              </a>
+            )}
             <div className="flex gap-2">
               <Button
                 variant="outline"
@@ -176,6 +191,19 @@ export default function AdminCertificatesManager() {
                   setFormData({ ...formData, date: e.target.value })
                 }
                 required
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="certificateUrl">Link do Certificado</Label>
+              <Input
+                id="certificateUrl"
+                type="url"
+                value={formData.certificateUrl}
+                onChange={(e) =>
+                  setFormData({ ...formData, certificateUrl: e.target.value })
+                }
+                placeholder="https://..."
               />
             </div>
 

@@ -17,6 +17,7 @@ export interface Certificate {
   issuer: string;
   date: string;
   imageUrl?: string | null;
+  certificateUrl?: string | null;
   imageKey?: string | null;
   order: number;
   createdAt: Date;

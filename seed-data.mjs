@@ -44,24 +44,28 @@ const certificates = [
     issuer: "Alura",
     date: "2024-06-15",
     imageUrl: "/manus-storage/cert-1.jpg",
+    certificateUrl: null,
   },
   {
     name: "Certificado em React Avançado",
     issuer: "Udemy",
     date: "2024-05-20",
     imageUrl: "/manus-storage/cert-2.jpg",
+    certificateUrl: null,
   },
   {
     name: "Certificado em Node.js e Express",
     issuer: "Coursera",
     date: "2024-04-10",
     imageUrl: "/manus-storage/cert-3.jpg",
+    certificateUrl: null,
   },
   {
     name: "Certificado em TypeScript Profissional",
     issuer: "LinkedIn Learning",
     date: "2024-03-05",
     imageUrl: "/manus-storage/cert-4.jpg",
+    certificateUrl: null,
   },
 ];
 
@@ -84,8 +88,8 @@ try {
   console.log("Inserindo certificados de exemplo...");
   for (const cert of certificates) {
     await connection.execute(
-      "INSERT INTO certificates (name, issuer, date, imageUrl) VALUES (?, ?, ?, ?)",
-      [cert.name, cert.issuer, cert.date, cert.imageUrl]
+      "INSERT INTO certificates (name, issuer, date, imageUrl, certificateUrl) VALUES (?, ?, ?, ?, ?)",
+      [cert.name, cert.issuer, cert.date, cert.imageUrl, cert.certificateUrl]
     );
   }
   console.log(`✓ ${certificates.length} certificados inseridos`);

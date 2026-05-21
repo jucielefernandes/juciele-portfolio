@@ -223,6 +223,7 @@ export const appRouter = router({
           issuer: z.string(),
           date: z.string(),
           imageUrl: z.string().optional(),
+          certificateUrl: z.string().optional(),
         })
       )
       .mutation(async ({ input, ctx }) => {
@@ -246,6 +247,7 @@ export const appRouter = router({
           issuer: z.string().optional(),
           date: z.string().optional(),
           imageUrl: z.string().optional(),
+          certificateUrl: z.string().optional(),
         })
       )
       .mutation(async ({ input, ctx }) => {

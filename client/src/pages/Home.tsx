@@ -82,6 +82,7 @@ export default function Home() {
                 href="https://www.linkedin.com/in/jucielefernandes/"
                 target="_blank"
                 rel="noopener noreferrer"
+                aria-label="LinkedIn de Juciele Fernandes"
                 className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-accent text-accent-foreground hover:opacity-90 transition-opacity"
               >
                 <Linkedin size={20} />
@@ -90,12 +91,14 @@ export default function Home() {
                 href="https://github.com/jucielefernandes"
                 target="_blank"
                 rel="noopener noreferrer"
+                aria-label="GitHub de Juciele Fernandes"
                 className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-accent text-accent-foreground hover:opacity-90 transition-opacity"
               >
                 <Github size={20} />
               </a>
               <a
                 href="mailto:juciele.bol@gmail.com"
+                aria-label="Enviar e-mail para Juciele Fernandes"
                 className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-accent text-accent-foreground hover:opacity-90 transition-opacity"
               >
                 <Mail size={20} />
@@ -253,9 +256,20 @@ export default function Home() {
                         <p className="text-muted-foreground mb-2">
                           {cert.issuer}
                         </p>
-                        <p className="text-sm text-muted-foreground">
+                        <p className="text-sm text-muted-foreground mb-4">
                           {new Date(cert.date).toLocaleDateString("pt-BR")}
                         </p>
+                        {cert.certificateUrl && (
+                          <a
+                            href={cert.certificateUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-2 text-accent hover:underline font-semibold"
+                          >
+                            Ver certificado
+                            <ExternalLink size={16} />
+                          </a>
+                        )}
                       </div>
                     </Card>
                   ))}

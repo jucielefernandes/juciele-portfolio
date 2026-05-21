@@ -49,6 +49,7 @@ export const certificates = mysqlTable("certificates", {
   issuer: varchar("issuer", { length: 255 }).notNull(),
   date: varchar("date", { length: 10 }).notNull(), // YYYY-MM-DD format
   imageUrl: text("imageUrl"),
+  certificateUrl: varchar("certificateUrl", { length: 500 }),
   imageKey: varchar("imageKey", { length: 255 }),
   order: int("order").default(0),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
