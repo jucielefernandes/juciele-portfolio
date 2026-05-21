@@ -156,6 +156,9 @@ class SDKServer {
 
   private getSessionSecret() {
     const secret = ENV.cookieSecret;
+    if (!secret) {
+      throw new Error("[Auth] JWT_SECRET env var is not set — cannot sign or verify sessions");
+    }
     return new TextEncoder().encode(secret);
   }
 

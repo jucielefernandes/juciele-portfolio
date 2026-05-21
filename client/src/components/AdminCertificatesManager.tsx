@@ -10,6 +10,16 @@ import { Plus, Edit2, Trash2 } from "lucide-react";
 import ImageUploader from "./ImageUploader";
 import type { Certificate } from "@/lib/types";
 
+function isSafeUrl(url: string | null | undefined): boolean {
+  if (!url) return false;
+  try {
+    const { protocol } = new URL(url);
+    return protocol === "https:" || protocol === "http:";
+  } catch {
+    return false;
+  }
+}
+
 export default function AdminCertificatesManager() {
   const [isOpen, setIsOpen] = useState(false);
   const [editingId, setEditingId] = useState<number | null>(null);
@@ -118,7 +128,7 @@ export default function AdminCertificatesManager() {
             <p className="text-xs text-muted-foreground mb-4">
               {new Date(cert.date).toLocaleDateString("pt-BR")}
             </p>
-            {cert.certificateUrl && (
+            {isSafeUrl(cert.certificateUrl) && (
               <a
                 href={cert.certificateUrl}
                 target="_blank"

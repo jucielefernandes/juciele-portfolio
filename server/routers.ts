@@ -39,11 +39,9 @@ export const appRouter = router({
   // Admin authentication
   admin: router({
     login: publicProcedure
-      .input(z.object({ email: z.string().email(), password: z.string() }))
+      .input(z.object({ email: z.string().email(), password: z.string().min(1) }))
       .mutation(async ({ input, ctx }) => {
-        console.log("[login] Email:", input.email);
         if (!verifyAdminCredentials(input.email, input.password)) {
-          console.log("[login] Invalid credentials");
           throw new TRPCError({
             code: "UNAUTHORIZED",
             message: "Invalid credentials",
@@ -54,18 +52,13 @@ export const appRouter = router({
         const sessionToken = nanoid(32);
         const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); // 7 days
         await createAdminSession(sessionToken, expiresAt);
-        console.log("[login] Session created:", sessionToken);
 
         // Set session cookie
         const cookieOptions = getSessionCookieOptions(ctx.req);
-        console.log("[login] Cookie options:", cookieOptions);
-        console.log("[login] Request protocol:", ctx.req.protocol);
-        
         ctx.res.cookie("admin_session", sessionToken, {
           ...cookieOptions,
           maxAge: 7 * 24 * 60 * 60 * 1000,
         });
-        console.log("[login] Cookie set");
 
         return { success: true };
       }),
@@ -82,23 +75,17 @@ export const appRouter = router({
 
     checkSession: publicProcedure.query(async ({ ctx }) => {
       const sessionToken = ctx.req.cookies?.admin_session;
-      console.log("[checkSession] Cookies:", ctx.req.cookies);
-      console.log("[checkSession] Session token:", sessionToken);
       
       if (!sessionToken) {
-        console.log("[checkSession] No session token found");
         return { isAuthenticated: false };
       }
 
       const session = await getAdminSessionByToken(sessionToken);
-      console.log("[checkSession] Session from DB:", session);
       
       if (!session || session.expiresAt < new Date()) {
-        console.log("[checkSession] Session invalid or expired");
         return { isAuthenticated: false };
       }
 
-      console.log("[checkSession] Session valid");
       return { isAuthenticated: true };
     }),
   }),
@@ -109,8 +96,8 @@ export const appRouter = router({
       .input(
         z.object({
           base64: z.string(),
-          filename: z.string(),
-          mimeType: z.string(),
+          filename: z.string().regex(/^[\w\-. ]+$/, "Invalid filename").max(255),
+          mimeType: z.string().regex(/^[\w]+\/[\w\-+.]+$/, "Invalid MIME type"),
         })
       )
       .mutation(async ({ input, ctx }) => {
@@ -143,11 +130,11 @@ export const appRouter = router({
     create: publicProcedure
       .input(
         z.object({
-          title: z.string(),
-          description: z.string(),
-          imageUrl: z.string().optional(),
+          title: z.string().min(1).max(255),
+          description: z.string().min(1),
+          imageUrl: z.string().url().optional(),
           techTags: z.array(z.string()),
-          projectUrl: z.string().optional(),
+          projectUrl: z.string().url().optional(),
         })
       )
       .mutation(async ({ input, ctx }) => {
@@ -170,11 +157,11 @@ export const appRouter = router({
       .input(
         z.object({
           id: z.number(),
-          title: z.string().optional(),
-          description: z.string().optional(),
-          imageUrl: z.string().optional(),
+          title: z.string().min(1).max(255).optional(),
+          description: z.string().min(1).optional(),
+          imageUrl: z.string().url().optional(),
           techTags: z.array(z.string()).optional(),
-          projectUrl: z.string().optional(),
+          projectUrl: z.string().url().optional(),
         })
       )
       .mutation(async ({ input, ctx }) => {
@@ -219,11 +206,11 @@ export const appRouter = router({
     create: publicProcedure
       .input(
         z.object({
-          name: z.string(),
-          issuer: z.string(),
-          date: z.string(),
-          imageUrl: z.string().optional(),
-          certificateUrl: z.string().optional(),
+          name: z.string().min(1).max(255),
+          issuer: z.string().min(1).max(255),
+          date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Date must be YYYY-MM-DD"),
+          imageUrl: z.string().url().optional(),
+          certificateUrl: z.string().url().optional(),
         })
       )
       .mutation(async ({ input, ctx }) => {
@@ -243,11 +230,11 @@ export const appRouter = router({
       .input(
         z.object({
           id: z.number(),
-          name: z.string().optional(),
-          issuer: z.string().optional(),
-          date: z.string().optional(),
-          imageUrl: z.string().optional(),
-          certificateUrl: z.string().optional(),
+          name: z.string().min(1).max(255).optional(),
+          issuer: z.string().min(1).max(255).optional(),
+          date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Date must be YYYY-MM-DD").optional(),
+          imageUrl: z.string().url().optional(),
+          certificateUrl: z.string().url().optional(),
         })
       )
       .mutation(async ({ input, ctx }) => {

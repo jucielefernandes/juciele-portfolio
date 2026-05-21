@@ -16,6 +16,26 @@ const TECH_STACK = [
   { name: "SQL", color: "bg-purple-100 text-purple-800" },
 ];
 
+function parseTags(techTags: string | null | undefined): string[] {
+  if (!techTags) return [];
+  try {
+    const parsed = JSON.parse(techTags);
+    return Array.isArray(parsed) ? parsed.map(String) : [];
+  } catch {
+    return [];
+  }
+}
+
+function isSafeUrl(url: string | null | undefined): boolean {
+  if (!url) return false;
+  try {
+    const { protocol } = new URL(url);
+    return protocol === "https:" || protocol === "http:";
+  } catch {
+    return false;
+  }
+}
+
 export default function Home() {
   const [activeTab, setActiveTab] = useState<"projects" | "certificates">(
     "projects"
@@ -192,7 +212,7 @@ export default function Home() {
                         </p>
                         {project.techTags && (
                           <div className="flex flex-wrap gap-2 mb-4">
-                            {JSON.parse(project.techTags).map(
+                            {parseTags(project.techTags).map(
                               (tag: string) => (
                                 <Badge
                                   key={tag}
@@ -205,7 +225,7 @@ export default function Home() {
                             )}
                           </div>
                         )}
-                        {project.projectUrl && (
+                        {isSafeUrl(project.projectUrl) && (
                           <a
                             href={project.projectUrl}
                             target="_blank"
@@ -259,7 +279,7 @@ export default function Home() {
                         <p className="text-sm text-muted-foreground mb-4">
                           {new Date(cert.date).toLocaleDateString("pt-BR")}
                         </p>
-                        {cert.certificateUrl && (
+                        {isSafeUrl(cert.certificateUrl) && (
                           <a
                             href={cert.certificateUrl}
                             target="_blank"

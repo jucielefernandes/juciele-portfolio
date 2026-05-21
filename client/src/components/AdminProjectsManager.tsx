@@ -11,6 +11,16 @@ import { Plus, Edit2, Trash2 } from "lucide-react";
 import ImageUploader from "./ImageUploader";
 import type { Project } from "@/lib/types";
 
+function parseTags(techTags: string | null | undefined): string {
+  if (!techTags) return "";
+  try {
+    const parsed = JSON.parse(techTags);
+    return Array.isArray(parsed) ? parsed.map(String).join(", ") : "";
+  } catch {
+    return "";
+  }
+}
+
 export default function AdminProjectsManager() {
   const [isOpen, setIsOpen] = useState(false);
   const [editingId, setEditingId] = useState<number | null>(null);
@@ -35,7 +45,7 @@ export default function AdminProjectsManager() {
       setFormData({
         title: project.title,
         description: project.description,
-        techTags: project.techTags ? JSON.parse(project.techTags).join(", ") : "",
+        techTags: project.techTags ? parseTags(project.techTags) : "",
         projectUrl: project.projectUrl || "",
         imageUrl: project.imageUrl || "",
       });

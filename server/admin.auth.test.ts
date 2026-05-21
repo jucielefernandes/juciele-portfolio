@@ -1,7 +1,38 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, beforeEach, beforeAll, afterAll, vi } from "vitest";
 import { appRouter } from "./routers";
 import { COOKIE_NAME } from "../shared/const";
 import type { TrpcContext } from "./_core/context";
+
+const { sessionStore } = vi.hoisted(() => ({
+  sessionStore: new Map<string, Date>(),
+}));
+
+vi.mock("./db", async (importOriginal) => {
+  const original = await importOriginal<typeof import("./db")>();
+  return {
+    ...original,
+    createAdminSession: vi.fn(async (token: string, expiresAt: Date) => {
+      sessionStore.set(token, expiresAt);
+    }),
+    getAdminSessionByToken: vi.fn(async (token: string) => {
+      const expiresAt = sessionStore.get(token);
+      if (!expiresAt) return undefined;
+      return { sessionToken: token, expiresAt };
+    }),
+    deleteAdminSession: vi.fn(async (token: string) => {
+      sessionStore.delete(token);
+    }),
+  };
+});
+
+beforeAll(() => {
+  vi.stubEnv("ADMIN_EMAIL", "juciele.bol@gmail.com");
+  vi.stubEnv("ADMIN_PASSWORD", "juciele1.0");
+});
+
+afterAll(() => {
+  vi.unstubAllEnvs();
+});
 
 type CookieCall = {
   name: string;
@@ -39,6 +70,10 @@ function createAuthContext(): {
 }
 
 describe("admin.login", () => {
+  beforeEach(() => {
+    sessionStore.clear();
+  });
+
   it("should fail with invalid credentials", async () => {
     const { ctx } = createAuthContext();
     const caller = appRouter.createCaller(ctx);
@@ -70,6 +105,10 @@ describe("admin.login", () => {
 });
 
 describe("admin.checkSession", () => {
+  beforeEach(() => {
+    sessionStore.clear();
+  });
+
   it("should return false when no session cookie exists", async () => {
     const { ctx } = createAuthContext();
     const caller = appRouter.createCaller(ctx);
@@ -95,6 +134,10 @@ describe("admin.checkSession", () => {
 });
 
 describe("admin.logout", () => {
+  beforeEach(() => {
+    sessionStore.clear();
+  });
+
   it("should clear admin_session cookie", async () => {
     const { ctx, cookies, setCookies } = createAuthContext();
     const caller = appRouter.createCaller(ctx);

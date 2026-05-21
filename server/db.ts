@@ -181,8 +181,14 @@ export async function deleteExpiredAdminSessions() {
 }
 
 // Helper to verify admin credentials
+// Credentials are read from ADMIN_EMAIL and ADMIN_PASSWORD environment variables.
+// Never commit these values to source control.
 export function verifyAdminCredentials(email: string, password: string): boolean {
-  const ADMIN_EMAIL = "juciele.bol@gmail.com";
-  const ADMIN_PASSWORD = "juciele1.0";
+  const ADMIN_EMAIL = process.env.ADMIN_EMAIL;
+  const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
+  if (!ADMIN_EMAIL || !ADMIN_PASSWORD) {
+    console.warn("[Admin] ADMIN_EMAIL or ADMIN_PASSWORD env vars not set — admin login disabled");
+    return false;
+  }
   return email === ADMIN_EMAIL && password === ADMIN_PASSWORD;
 }

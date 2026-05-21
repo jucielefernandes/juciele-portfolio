@@ -1,6 +1,37 @@
-import { describe, it, expect, beforeEach } from "vitest";
+import { describe, it, expect, beforeEach, beforeAll, afterAll, vi } from "vitest";
 import { appRouter } from "./routers";
 import type { TrpcContext } from "./_core/context";
+
+const { sessionStore } = vi.hoisted(() => ({
+  sessionStore: new Map<string, Date>(),
+}));
+
+vi.mock("./db", async (importOriginal) => {
+  const original = await importOriginal<typeof import("./db")>();
+  return {
+    ...original,
+    createAdminSession: vi.fn(async (token: string, expiresAt: Date) => {
+      sessionStore.set(token, expiresAt);
+    }),
+    getAdminSessionByToken: vi.fn(async (token: string) => {
+      const expiresAt = sessionStore.get(token);
+      if (!expiresAt) return undefined;
+      return { sessionToken: token, expiresAt };
+    }),
+    deleteAdminSession: vi.fn(async (token: string) => {
+      sessionStore.delete(token);
+    }),
+  };
+});
+
+beforeAll(() => {
+  vi.stubEnv("ADMIN_EMAIL", "juciele.bol@gmail.com");
+  vi.stubEnv("ADMIN_PASSWORD", "juciele1.0");
+});
+
+afterAll(() => {
+  vi.unstubAllEnvs();
+});
 
 type CookieCall = {
   name: string;
@@ -33,6 +64,10 @@ function createContextWithCookie(sessionToken?: string): {
 }
 
 describe("admin session flow", () => {
+  beforeEach(() => {
+    sessionStore.clear();
+  });
+
   it("should complete full login -> check session -> logout flow", async () => {
     // Step 1: Login
     const { ctx: loginCtx, cookieSet: loginCookies } = createContextWithCookie();
