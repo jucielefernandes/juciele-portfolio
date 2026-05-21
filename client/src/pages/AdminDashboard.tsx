@@ -15,11 +15,18 @@ export default function AdminDashboard() {
   const logoutMutation = trpc.admin.logout.useMutation();
 
   useEffect(() => {
+    console.log("[AdminDashboard] Session query state:", {
+      isLoading: sessionQuery.isLoading,
+      isAuthenticated: sessionQuery.data?.isAuthenticated,
+      isError: sessionQuery.isError,
+    });
+
     if (
       !sessionQuery.isLoading &&
       !sessionQuery.data?.isAuthenticated &&
       !isRedirecting
     ) {
+      console.log("[AdminDashboard] Usuário não autenticado, redirecionando para login");
       setIsRedirecting(true);
       setLocation("/admin");
     }
@@ -63,10 +70,12 @@ export default function AdminDashboard() {
 
   const handleLogout = async () => {
     try {
+      console.log("[AdminDashboard] Iniciando logout");
       await logoutMutation.mutateAsync();
       toast.success("Logout realizado com sucesso!");
       setLocation("/");
     } catch (error) {
+      console.error("[AdminDashboard] Erro ao fazer logout:", error);
       toast.error("Erro ao fazer logout");
     }
   };

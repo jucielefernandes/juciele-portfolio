@@ -6,26 +6,40 @@ import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { trpc } from "@/lib/trpc";
 import { toast } from "sonner";
-import { Lock } from "lucide-react";
+import { Lock, AlertCircle } from "lucide-react";
 
 export default function AdminLogin() {
   const [, setLocation] = useLocation();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const loginMutation = trpc.admin.login.useMutation();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
+    setError(null);
 
     try {
-      await loginMutation.mutateAsync({ email, password });
+      console.log("[AdminLogin] Iniciando login com email:", email);
+      
+      const result = await loginMutation.mutateAsync({ email, password });
+      console.log("[AdminLogin] Login bem-sucedido:", result);
+      
       toast.success("Login realizado com sucesso!");
+      
+      // Aguardar um pouco para garantir que o cookie foi salvo
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
+      console.log("[AdminLogin] Navegando para dashboard");
       setLocation("/admin/dashboard");
-    } catch (error) {
-      toast.error("Email ou senha inválidos");
+    } catch (error: any) {
+      console.error("[AdminLogin] Erro ao fazer login:", error);
+      const errorMsg = error?.message || "Email ou senha inválidos";
+      setError(errorMsg);
+      toast.error(errorMsg);
     } finally {
       setIsLoading(false);
     }
@@ -47,6 +61,13 @@ export default function AdminLogin() {
           <p className="text-center text-muted-foreground mb-8">
             Faça login para gerenciar seu portfólio
           </p>
+
+          {error && (
+            <div className="mb-6 p-3 bg-destructive/10 border border-destructive/30 rounded-lg flex gap-2">
+              <AlertCircle size={18} className="text-destructive flex-shrink-0 mt-0.5" />
+              <p className="text-sm text-destructive">{error}</p>
+            </div>
+          )}
 
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="space-y-2">
@@ -83,12 +104,6 @@ export default function AdminLogin() {
               {isLoading ? "Entrando..." : "Entrar"}
             </Button>
           </form>
-
-          <div className="mt-8 p-4 bg-muted/50 rounded-lg">
-            <p className="text-xs text-muted-foreground text-center">
-              Credenciais de teste: juciele.bol@gmail.com / juciele1.0
-            </p>
-          </div>
         </div>
       </Card>
     </div>
