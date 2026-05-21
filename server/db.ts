@@ -1,6 +1,6 @@
-import { eq } from "drizzle-orm";
+import { eq, lt } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users } from "../drizzle/schema";
+import { InsertUser, users, projects, InsertProject, certificates, InsertCertificate, adminSessions } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -89,4 +89,100 @@ export async function getUserByOpenId(openId: string) {
   return result.length > 0 ? result[0] : undefined;
 }
 
-// TODO: add feature queries here as your schema grows.
+// Projects queries
+export async function getProjects() {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(projects).orderBy(projects.order);
+}
+
+export async function getProjectById(id: number) {
+  const db = await getDb();
+  if (!db) return undefined;
+  const result = await db.select().from(projects).where(eq(projects.id, id)).limit(1);
+  return result.length > 0 ? result[0] : undefined;
+}
+
+export async function createProject(data: InsertProject) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const result = await db.insert(projects).values(data);
+  return result;
+}
+
+export async function updateProject(id: number, data: Partial<InsertProject>) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  return db.update(projects).set(data).where(eq(projects.id, id));
+}
+
+export async function deleteProject(id: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  return db.delete(projects).where(eq(projects.id, id));
+}
+
+// Certificates queries
+export async function getCertificates() {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(certificates).orderBy(certificates.order);
+}
+
+export async function getCertificateById(id: number) {
+  const db = await getDb();
+  if (!db) return undefined;
+  const result = await db.select().from(certificates).where(eq(certificates.id, id)).limit(1);
+  return result.length > 0 ? result[0] : undefined;
+}
+
+export async function createCertificate(data: InsertCertificate) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  return db.insert(certificates).values(data);
+}
+
+export async function updateCertificate(id: number, data: Partial<InsertCertificate>) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  return db.update(certificates).set(data).where(eq(certificates.id, id));
+}
+
+export async function deleteCertificate(id: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  return db.delete(certificates).where(eq(certificates.id, id));
+}
+
+// Admin sessions queries
+export async function createAdminSession(sessionToken: string, expiresAt: Date) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  return db.insert(adminSessions).values({ sessionToken, expiresAt });
+}
+
+export async function getAdminSessionByToken(sessionToken: string) {
+  const db = await getDb();
+  if (!db) return undefined;
+  const result = await db.select().from(adminSessions).where(eq(adminSessions.sessionToken, sessionToken)).limit(1);
+  return result.length > 0 ? result[0] : undefined;
+}
+
+export async function deleteAdminSession(sessionToken: string) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  return db.delete(adminSessions).where(eq(adminSessions.sessionToken, sessionToken));
+}
+
+export async function deleteExpiredAdminSessions() {
+  const db = await getDb();
+  if (!db) return;
+  return db.delete(adminSessions).where(lt(adminSessions.expiresAt, new Date()));
+}
+
+// Helper to verify admin credentials
+export function verifyAdminCredentials(email: string, password: string): boolean {
+  const ADMIN_EMAIL = "juciele.bol@gmail.com";
+  const ADMIN_PASSWORD = "juciele1.0";
+  return email === ADMIN_EMAIL && password === ADMIN_PASSWORD;
+}
