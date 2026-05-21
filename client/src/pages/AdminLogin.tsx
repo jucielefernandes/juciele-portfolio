@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -9,13 +9,22 @@ import { toast } from "sonner";
 import { Lock, AlertCircle } from "lucide-react";
 
 export default function AdminLogin() {
-  const [, setLocation] = useLocation();
+  const [location, setLocation] = useLocation();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const loginMutation = trpc.admin.login.useMutation();
+  const sessionQuery = trpc.admin.checkSession.useQuery();
+
+  // Se já está autenticado, redireciona para dashboard
+  useEffect(() => {
+    if (sessionQuery.data?.isAuthenticated) {
+      console.log("[AdminLogin] Já autenticado, redirecionando para dashboard");
+      setLocation("/admin/dashboard");
+    }
+  }, [sessionQuery.data?.isAuthenticated, setLocation]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -31,10 +40,21 @@ export default function AdminLogin() {
       toast.success("Login realizado com sucesso!");
       
       // Aguardar um pouco para garantir que o cookie foi salvo
-      await new Promise(resolve => setTimeout(resolve, 500));
+      await new Promise(resolve => setTimeout(resolve, 1000));
       
-      console.log("[AdminLogin] Navegando para dashboard");
-      setLocation("/admin/dashboard");
+      // Refetch session para verificar autenticação
+      console.log("[AdminLogin] Verificando sessão...");
+      const sessionCheck = await sessionQuery.refetch();
+      console.log("[AdminLogin] Resultado da verificação:", sessionCheck.data);
+      
+      if (sessionCheck.data?.isAuthenticated) {
+        console.log("[AdminLogin] Sessão verificada, navegando para dashboard");
+        setLocation("/admin/dashboard");
+      } else {
+        console.error("[AdminLogin] Sessão não verificada após login");
+        setError("Erro ao verificar sessão. Tente novamente.");
+        toast.error("Erro ao verificar sessão");
+      }
     } catch (error: any) {
       console.error("[AdminLogin] Erro ao fazer login:", error);
       const errorMsg = error?.message || "Email ou senha inválidos";
