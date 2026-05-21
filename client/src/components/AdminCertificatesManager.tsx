@@ -55,12 +55,10 @@ export default function AdminCertificatesManager() {
       if (editingId) {
         await updateMutation.mutateAsync({
           id: editingId,
-          data: {
-            name: formData.name,
-            issuer: formData.issuer,
-            date: formData.date,
-            imageUrl: formData.imageUrl || undefined,
-          },
+          name: formData.name,
+          issuer: formData.issuer,
+          date: formData.date,
+          imageUrl: formData.imageUrl || undefined,
         });
         toast.success("Certificado atualizado com sucesso!");
       } else {
@@ -83,7 +81,7 @@ export default function AdminCertificatesManager() {
     if (!confirm("Tem certeza que deseja deletar este certificado?")) return;
 
     try {
-      await deleteMutation.mutateAsync(id);
+      await deleteMutation.mutateAsync({ id });
       toast.success("Certificado deletado com sucesso!");
       certificatesQuery.refetch();
     } catch (error) {

@@ -64,20 +64,18 @@ export default function AdminProjectsManager() {
       if (editingId) {
         await updateMutation.mutateAsync({
           id: editingId,
-          data: {
-            title: formData.title,
-            description: formData.description,
-            techTags: JSON.stringify(techTagsArray),
-            projectUrl: formData.projectUrl || undefined,
-            imageUrl: formData.imageUrl || undefined,
-          },
+          title: formData.title,
+          description: formData.description,
+          techTags: techTagsArray,
+          projectUrl: formData.projectUrl || undefined,
+          imageUrl: formData.imageUrl || undefined,
         });
         toast.success("Projeto atualizado com sucesso!");
       } else {
         await createMutation.mutateAsync({
           title: formData.title,
           description: formData.description,
-          techTags: JSON.stringify(techTagsArray),
+          techTags: techTagsArray,
           projectUrl: formData.projectUrl || undefined,
           imageUrl: formData.imageUrl || undefined,
         });
@@ -94,7 +92,7 @@ export default function AdminProjectsManager() {
     if (!confirm("Tem certeza que deseja deletar este projeto?")) return;
 
     try {
-      await deleteMutation.mutateAsync(id);
+      await deleteMutation.mutateAsync({ id });
       toast.success("Projeto deletado com sucesso!");
       projectsQuery.refetch();
     } catch (error) {
